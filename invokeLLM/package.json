@@ -1,0 +1,21 @@
+{
+  "name": "invokellm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "openai": "^6.49.0"
+  },
+  "dependencies": {
+    "@tavily/core": "^0.7.12",
+    "dotenv": "^17.4.2",
+    "groq-sdk": "^1.6.0"
+  }
+}
