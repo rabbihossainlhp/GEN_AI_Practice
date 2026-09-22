@@ -41,7 +41,7 @@ export async function GenerateAnsByLLM(userMessage) {
     while (true) {
         const completion = await groq.chat.completions.create({
             model: "openai/gpt-oss-20b",
-            max_completion_tokens: 200,
+            max_completion_tokens: 500,
             temperature: 0,
             // top_p: 1,
             // stop:"Hayat",
@@ -75,7 +75,13 @@ export async function GenerateAnsByLLM(userMessage) {
         const toolCalls = completion.choices[0].message.tool_calls
 
 
+        //FOR DEBUGGING ISSUE--->
         // console.log(completion)
+        console.log({
+            finishReason:completion.choices[0].finish_reason,
+            content:completion.choices[0].message.content,
+            toolCalls:completion.choices[0].message.tool_calls
+        })
 
         if (!toolCalls) {
             // console.log(`AI assitant: `, completion.choices[0].message.content)
@@ -119,9 +125,9 @@ export async function GenerateAnsByLLM(userMessage) {
 async function webSearch({ query }) {
     console.log("Calling tool....>")
     try {
-        const response = await exa.search(query, {
+        const searchByExa = await exa.search(query, {
             type:"auto",
-            numResults:3,
+            numResults:2,
             contents:{
                 text:{
                     maxCharacters:10000
@@ -130,13 +136,23 @@ async function webSearch({ query }) {
             }
         });
 
-        console.log(response)
-        const finalResult = response.results.map(result => result.content).join("\n\n");
-        // console.log("Response from webSearch:----> ", finalResult);
+        const response = await exa.getContents(
+            [searchByExa.results[0].url, searchByExa.results[1].url],
+            {
+                highlights: {
+                    query: query
+                }
+            }
+        )
+
+        // console.log(response.results[0].highlights)
+
+        const finalResult = response.results.map(result => result.highlights).join("\n\n\n");
+        console.log("Response from webSearch:----> ", finalResult);
 
         return finalResult;
     } catch (error) {
-        console.error("Something is wrong during websearch by tavily ", error);
+        console.error("Something is wrong during websearch by search API ", error);
         return "Search failed due to authorization or limits."
     }
 
