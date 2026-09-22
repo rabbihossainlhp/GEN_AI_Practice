@@ -1,13 +1,15 @@
 import { config } from "dotenv";
 config()
 import Groq from "groq-sdk";
-import { tavily } from "@tavily/core";
+// import { tavily } from "@tavily/core";
+import Exa from "exa-js";
 
 
 
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-const tavilyClient = tavily({ apiKey: process.env.TAVILY_API_KEY })
+// const tavilyClient = tavily({ apiKey: process.env.TAVILY_API_KEY })
+const exa = new Exa(process.env.EXA_API_KEY);
 
 
 export async function GenerateAnsByLLM(userMessage) {
@@ -117,11 +119,18 @@ export async function GenerateAnsByLLM(userMessage) {
 async function webSearch({ query }) {
     console.log("Calling tool....>")
     try {
-        const response = await tavilyClient.search(query, {
-            searchDepth: "advanced",
-            maxResults: 2
+        const response = await exa.search(query, {
+            type:"auto",
+            numResults:3,
+            contents:{
+                text:{
+                    maxCharacters:10000
+                },
+                highlights:true
+            }
         });
 
+        console.log(response)
         const finalResult = response.results.map(result => result.content).join("\n\n");
         // console.log("Response from webSearch:----> ", finalResult);
 
