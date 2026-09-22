@@ -6,15 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev":"nodemon app.js"
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@tavily/core": "^0.7.13",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
+    "groq-sdk": "^1.6.0",
     "morgan": "^1.12.1"
   }
 }
