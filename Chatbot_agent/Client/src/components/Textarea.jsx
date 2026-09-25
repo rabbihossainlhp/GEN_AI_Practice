@@ -1,9 +1,10 @@
 import { useState } from "react"
+import { ServerCall } from "../utils/api.services";
 
 export default function Textarea({ onSend }) {
   let [text, setText] = useState('');
 
-  function handleSendButton() {
+  async function handleSendButton() {
 
     const trimmedText = text.trim();
 
@@ -11,7 +12,10 @@ export default function Textarea({ onSend }) {
       return;
     };
 
-    onSend(trimmedText);
+    const getResponse = await ServerCall(trimmedText);
+    
+    onSend(trimmedText,getResponse.message);
+    
     setText("");
   }
 

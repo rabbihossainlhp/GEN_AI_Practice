@@ -6,11 +6,11 @@ function App() {
 
   let [messages,setMessage] = useState([]);
 
-  function sendMessage(messageText){
+  function sendMessage(msgFromUser,msgFromAgent){
     const userMessage = {
       id:crypto.randomUUID(),
       role:"user",
-      text:messageText,
+      text:msgFromUser,
     };
 
     setMessage((prev)=>[
@@ -23,7 +23,7 @@ function App() {
     const agentMessage = {
       id:crypto.randomUUID(),
       role:"agent",
-      text : "Hi I'm fine what about you."
+      text : msgFromAgent
     }
       
     setTimeout(() => {
