@@ -2,16 +2,16 @@ import Usermessage from "./Usermessage";
 import AgentMessage from "./AgentMessage";
 import { useEffect,useRef } from "react";
 
-export default function Chatwindow({messages}) {
+export default function Chatwindow({messages,isResponding}) {
     const bottomRef = useRef(null);
 
-    
+
     useEffect(()=>{
         bottomRef.current?.scrollIntoView({
             behavior:"smooth",
             block:"end",
         })
-    },[messages])
+    },[messages,isResponding])
 
 
     return (
@@ -34,6 +34,20 @@ export default function Chatwindow({messages}) {
             {/* <div className="w-full flex justify-start ">
                 <p className=" text-white text-end px-4 w-fit mt-4 ml-2 bg-slate-700 rounded-2xl py-2">Fine how can I assist you today ?</p>
             </div> */}
+
+
+            {isResponding &&(
+                <div>
+                    <span>Thinking</span>
+                    <span className="flex gap-1">
+                        <span className="h-1 w-1 animate-bounce rounded-full bg-slate-300 [animation-delay:50ms]"></span>
+                        <span className="h-1 w-1 animate-bounce rounded-full bg-slate-300 [animation-delay:150ms]"></span>
+                        <span className="h-1 w-1 animate-bounce rounded-full bg-slate-300 [animation-delay:300ms]"></span>
+                    </span>
+                </div>
+            )}
+
+            <div ref={bottomRef}/>
             
         </div>
     )
