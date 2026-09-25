@@ -14,9 +14,10 @@ export default function Textarea({ onSend }) {
 
     const getResponse = await ServerCall(trimmedText);
     
+    setText("");
     onSend(trimmedText,getResponse.message);
     
-    setText("");
+    
   }
 
 
