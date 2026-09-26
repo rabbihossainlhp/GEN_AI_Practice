@@ -1,9 +1,16 @@
 import { GenerateAnsByLLM } from "./LLmEngine.js";
 
 export  const userQuestionHandler = async (req,res) =>{
-    const {message} =  req.body;
+    const {message,userId} =  req.body;
 
-    const result = await GenerateAnsByLLM(message);
+    if(!message || !userId){
+        return res.status(400).json({
+            success:true,
+            message:"All fields are required.."
+        })
+    }
+
+    const result = await GenerateAnsByLLM(message,userId);
 
     console.log("Ans: ", result);
 

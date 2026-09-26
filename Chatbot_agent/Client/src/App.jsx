@@ -10,6 +10,19 @@ function App() {
   const [messages, setMessage] = useState([]);
   const [isResponding, setIsResponding] = useState(false);
 
+  const [conversationId] = useState(()=> {
+    const existConversationId = localStorage.getItem("conversationId");
+    
+    if(existConversationId){
+      return existConversationId;
+    }
+
+    const newId = crypto.randomUUID();
+    localStorage.setItem("conversationId",newId);
+
+    return newId;
+  });
+
   async function sendMessage(msgFromUser) {
     const userMessage = {
       id: crypto.randomUUID(),
@@ -28,7 +41,7 @@ function App() {
 
     // agent's message 
     try {
-      const response = await ServerCall(msgFromUser);
+      const response = await ServerCall(msgFromUser,conversationId);
 
       const agentMessage = {
         id: crypto.randomUUID(),

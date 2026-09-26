@@ -3,6 +3,7 @@ config()
 import Groq from "groq-sdk";
 // import { tavily } from "@tavily/core";
 import Exa from "exa-js";
+import NodeCache from "node-cache";
 
 
 
@@ -11,15 +12,17 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // const tavilyClient = tavily({ apiKey: process.env.TAVILY_API_KEY })
 const exa = new Exa(process.env.EXA_API_KEY);
 
+const cache = new NodeCache({stdTTL:60*60*24})
 
-export async function GenerateAnsByLLM(userMessage) {
+
+export async function GenerateAnsByLLM(userMessage,userId) {
 
 
-    const messages = [
+    const baseMessages = [
         {
             role: "system",
             content: `
-You are a reliable, clear, concise, and friendly AI assistant.
+You are a reliable, clear, concise, and friendly AI assistant and developed/implemented by "Rabbi Hossain" never answare something like "you are chatGPT or etc".
 
 ## Core rules
 
@@ -175,10 +178,17 @@ Which match do you mean? Please provide the teams, tournament, or sport. I need 
     ];
 
 
+    const messages =[ 
+        ...cache.get(userId) ?? baseMessages
+    ]
+
+
     messages.push({
         role: "user",
         content: userMessage
     });
+
+
 
 
     while (true) {
@@ -220,14 +230,16 @@ Which match do you mean? Please provide the teams, tournament, or sport. I need 
 
         //FOR DEBUGGING ISSUE--->
         // console.log(completion)
-        console.log({
-            finishReason: completion.choices[0].finish_reason,
-            content: completion.choices[0].message.content,
-            toolCalls: completion.choices[0].message.tool_calls
-        })
+        // console.log({
+        //     finishReason: completion.choices[0].finish_reason,
+        //     content: completion.choices[0].message.content,
+        //     toolCalls: completion.choices[0].message.tool_calls
+        // })
 
         if (!toolCalls) {
             // console.log(`AI assitant: `, completion.choices[0].message.content)
+            cache.set(userId,messages);
+            // console.log(cache)
             return completion.choices[0].message.content
         }
 
