@@ -191,7 +191,16 @@ Which match do you mean? Please provide the teams, tournament, or sport. I need 
 
 
 
+    const Max_Retries = 9;
+    let count = 0;
+
     while (true) {
+
+        if(count>Max_Retries){
+            return "I couldn't generate the expected result "
+        }
+        count++;
+
         const completion = await groq.chat.completions.create({
             model: "openai/gpt-oss-20b",
             max_completion_tokens: 500,
